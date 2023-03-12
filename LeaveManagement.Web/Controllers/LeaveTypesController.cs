@@ -10,17 +10,18 @@ namespace LeaveManagement.Web.Controllers
     public class LeaveTypesController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly IMapper _mapper;
+        private readonly IMapper _mapper; //inject AutoMapperConfig
 
         public LeaveTypesController(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
-            _mapper = mapper;
+            _mapper = mapper; //inject AutoMapperConfig
         }
 
         // GET: LeaveTypes
         public async Task<IActionResult> Index()
         {
+            // Let Automapper map the typeof LeaveType to typeof LeavetypeViewModel
             var leaveTypes = _mapper.Map<List<LeaveTypeViewModel>>(await _context.LeaveTypes.ToListAsync());
 
             return View(leaveTypes);
@@ -45,25 +46,48 @@ namespace LeaveManagement.Web.Controllers
         }
 
         // GET: LeaveTypes/Create
+        // brings the create view to screen
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: LeaveTypes/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,DefaultDays,Id,DateCreated,DateModified")] LeaveType leaveType)
+        public async Task<IActionResult> Create(LeaveTypeViewModel leaveTypeViewModel)
+        /// <summary>
+        /// 
+        /// POST task: LeaveTypes/Create
+        /// handles the POST request to create a Leave Type
+        /// 
+        /// </summary>
+        /// 
+        /// <param name="leaveTypeViewModel"></param>
+        /// 
+        /// <returns>HTTPResponse - Index OR Create</returns>
         {
+
             if (ModelState.IsValid)
             {
-                _context.Add(leaveType);
+                var leaveTypeDb = _mapper.Map<LeaveType>(leaveTypeViewModel);
+
+                //dates are not part of the data shown, so we set them up in the background.
+                leaveTypeDb.DateCreated = DateTime.Now;
+                leaveTypeDb.DateModified = DateTime.Now;
+
+                // add the leaveTypeDb to the database
+                _context.Add(leaveTypeDb);
+
+                // save the data to a new table instance on Submit
                 await _context.SaveChangesAsync();
+
+                // after submition, redirect to LeaveType Index
                 return RedirectToAction(nameof(Index));
             }
-            return View(leaveType);
+            // if modelstate is not valid rerender form with errors
+            return View(leaveTypeViewModel);
         }
 
         // GET: LeaveTypes/Edit/5

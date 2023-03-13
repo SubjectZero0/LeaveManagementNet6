@@ -52,23 +52,20 @@ namespace LeaveManagement.Web.Controllers
             return View();
         }
 
-
-        
+        /// <summary>
+        ///
+        /// POST task: LeaveTypes/Create
+        /// handles the POST request to create a Leave Type
+        ///
+        /// </summary>
+        ///
+        /// <param name="leaveTypeViewModel"></param>
+        ///
+        /// <returns>HTTPResponse - Index OR Create</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(LeaveTypeViewModel leaveTypeViewModel)
-        /// <summary>
-        /// 
-        /// POST task: LeaveTypes/Create
-        /// handles the POST request to create a Leave Type
-        /// 
-        /// </summary>
-        /// 
-        /// <param name="leaveTypeViewModel"></param>
-        /// 
-        /// <returns>HTTPResponse - Index OR Create</returns>
         {
-
             if (ModelState.IsValid)
             {
                 var leaveTypeDb = _mapper.Map<LeaveType>(leaveTypeViewModel);
@@ -103,7 +100,8 @@ namespace LeaveManagement.Web.Controllers
             {
                 return NotFound();
             }
-            return View(leaveType);
+            var leaveTypeViewModel = _mapper.Map<LeaveTypeViewModel>(leaveType);
+            return View(leaveTypeViewModel);
         }
 
         // POST: LeaveTypes/Edit/5
@@ -111,9 +109,9 @@ namespace LeaveManagement.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,DefaultDays,Id,DateCreated,DateModified")] LeaveType leaveType)
+        public async Task<IActionResult> Edit(int id, LeaveTypeViewModel leaveTypeViewModel)
         {
-            if (id != leaveType.Id)
+            if (id != leaveTypeViewModel.Id)
             {
                 return NotFound();
             }
@@ -122,12 +120,14 @@ namespace LeaveManagement.Web.Controllers
             {
                 try
                 {
-                    _context.Update(leaveType);
+                    var leaveTypeDb = _mapper.Map<LeaveType>(leaveTypeViewModel);
+
+                    _context.Update(leaveTypeDb);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!LeaveTypeExists(leaveType.Id))
+                    if (!LeaveTypeExists(leaveTypeViewModel.Id))
                     {
                         return NotFound();
                     }
@@ -138,7 +138,7 @@ namespace LeaveManagement.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(leaveType);
+            return View(leaveTypeViewModel);
         }
 
         // GET: LeaveTypes/Delete/5

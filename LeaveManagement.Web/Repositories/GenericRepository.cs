@@ -1,37 +1,64 @@
 ﻿using LeaveManagement.Web.Contracts;
+using LeaveManagement.Web.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace LeaveManagement.Web.Repositories
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
-        public Task<T> AddAsync(T entity)
+        private readonly ApplicationDbContext context;
+
+        public GenericRepository(ApplicationDbContext context)
         {
-            throw new NotImplementedException();
+            this.context = context;
         }
 
-        public Task<T> DeleteAsync(int id)
+        public async Task<T> AddAsync(T entity)
         {
-            throw new NotImplementedException();
+            await context.AddAsync(entity);
+            await context.SaveChangesAsync();
+            return entity;
         }
 
-        public Task<bool> Exists(int id)
+        public async Task DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var entity = await GetAsync(id);
+
+            if (entity != null)
+            {
+                context.Set<T>().Remove(entity);
+            }
+
+            await context.SaveChangesAsync();
         }
 
-        public Task<List<T>> GetAllAsync()
+        public async Task<bool> Exists(int id)
         {
-            throw new NotImplementedException();
+            var entity = await GetAsync(id);
+
+            if (entity != null)
+            {
+                return true;
+            }
+            return false;
         }
 
-        public Task<T> GetAsync(int id)
+        public async Task<List<T>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await context.Set<T>().ToListAsync();
         }
 
-        public Task<T> UpdateAsync(T entity)
+        public async Task<T> GetAsync(int id)
         {
-            throw new NotImplementedException();
+            var entity = await context.Set<T>().FindAsync(id); //set<T>() is a generic table relative to T. Any table used with this method
+
+            return entity;
+        }
+
+        public async Task UpdateAsync(T entity)
+        {
+            context.Update(entity);
+            await context.SaveChangesAsync();
         }
     }
 }

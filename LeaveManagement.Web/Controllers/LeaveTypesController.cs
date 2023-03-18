@@ -22,9 +22,9 @@ namespace LeaveManagement.Web.Controllers
         public async Task<IActionResult> Index()
         {
             // Let Automapper map the typeof LeaveType to typeof LeavetypeViewModel
-            var leaveTypes = _mapper.Map<List<LeaveTypeViewModel>>(await _context.LeaveTypes.ToListAsync());
+            var leaveTypesViewModel = _mapper.Map<List<LeaveTypeViewModel>>(await _context.LeaveTypes.ToListAsync());
 
-            return View(leaveTypes);
+            return View(leaveTypesViewModel);
         }
 
         // GET: LeaveTypes/Details/5
@@ -41,8 +41,8 @@ namespace LeaveManagement.Web.Controllers
             {
                 return NotFound();
             }
-
-            return View(leaveType);
+            var leaveTypeViewModel = _mapper.Map<LeaveTypeViewModel>(leaveType);
+            return View(leaveTypeViewModel);
         }
 
         // GET: LeaveTypes/Create
@@ -141,23 +141,6 @@ namespace LeaveManagement.Web.Controllers
             return View(leaveTypeViewModel);
         }
 
-        // GET: LeaveTypes/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.LeaveTypes == null)
-            {
-                return NotFound();
-            }
-
-            var leaveType = await _context.LeaveTypes
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (leaveType == null)
-            {
-                return NotFound();
-            }
-
-            return View(leaveType);
-        }
 
         // POST: LeaveTypes/Delete/5
         [HttpPost, ActionName("Delete")]

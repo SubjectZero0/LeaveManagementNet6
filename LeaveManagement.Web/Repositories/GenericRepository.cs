@@ -1,5 +1,6 @@
 ﻿using LeaveManagement.Web.Contracts;
 using LeaveManagement.Web.Data;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace LeaveManagement.Web.Repositories
@@ -20,7 +21,7 @@ namespace LeaveManagement.Web.Repositories
             return entity;
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(int? id)
         {
             var entity = await GetAsync(id);
 
@@ -32,7 +33,7 @@ namespace LeaveManagement.Web.Repositories
             await context.SaveChangesAsync();
         }
 
-        public async Task<bool> Exists(int id)
+        public async Task<bool> Exists(int? id)
         {
             var entity = await GetAsync(id);
 
@@ -48,8 +49,12 @@ namespace LeaveManagement.Web.Repositories
             return await context.Set<T>().ToListAsync();
         }
 
-        public async Task<T> GetAsync(int id)
+        public async Task<T?> GetAsync(int? id)
         {
+            if (id == null)
+            {
+                return null;
+            }
             var entity = await context.Set<T>().FindAsync(id); //set<T>() is a generic table relative to T. Any table used with this method
 
             return entity;

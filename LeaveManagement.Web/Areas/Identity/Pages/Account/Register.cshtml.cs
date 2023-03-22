@@ -116,7 +116,7 @@ namespace LeaveManagement.Web.Areas.Identity.Pages.Account
                 user.LastName = Input.LastName;
                 user.TaxId = Input.TaxId;
                 user.DateOfBirth = Input.DateOfBirth;
-                user.DateJoined = Input.DateJoined;
+                user.DateJoined = DateTime.Now;
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
 

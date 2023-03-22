@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using LeaveManagement.Web.Configurations.Entities;
 
 namespace LeaveManagement.Web.Areas.Identity.Pages.Account
 {
@@ -123,7 +124,7 @@ namespace LeaveManagement.Web.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");
 
-                    await _userManager.AddToRoleAsync(user, "User"); //new registrations are assigned the role User automatically
+                    await _userManager.AddToRoleAsync(user, UserRoleConstants.User); //new registrations are assigned the role User automatically
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);

@@ -11,7 +11,7 @@ namespace LeaveManagement.Web.Configurations.Entities
             builder.HasData(
                 new IdentityUserRole<string>
                 {
-                    RoleId = "4cge9abc - 6741 - 473f - 907e - 15e96893788e",
+                    RoleId = UserRoleConstants.AdminRoleId,
                     UserId = "3dge9abc - 0000 - 471p - 907e - 15e96893788e"
                 }
                 );

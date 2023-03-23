@@ -6,23 +6,29 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LeaveManagement.Web.Data;
+using LeaveManagement.Web.Contracts;
+using AutoMapper;
+using LeaveManagement.Web.Views;
 
 namespace LeaveManagement.Web.Controllers
 {
     public class LeaveAllocationsController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ILeaveAllocationsRepository _leaveAllocationsRepository;
+        private readonly IMapper _mapper;
 
-        public LeaveAllocationsController(ApplicationDbContext context)
+        public LeaveAllocationsController(ILeaveAllocationsRepository leaveAllocationsRepository, IMapper mapper)
         {
-            _context = context;
+            this._leaveAllocationsRepository = leaveAllocationsRepository;
+            this._mapper = mapper;
         }
 
         // GET: LeaveAllocations
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.LeaveAllocations.Include(l => l.LeaveType);
-            return View(await applicationDbContext.ToListAsync());
+            var leaveAllocationDb = await _leaveAllocationsRepository.GetAllAsync();
+            var leaveAllocationVM = _mapper.Map<List<LeaveAllocationsViewModel>>(leaveAllocationDb);
+            return View(leaveAllocationVM);
         }
 
         // GET: LeaveAllocations/Details/5
@@ -154,14 +160,14 @@ namespace LeaveManagement.Web.Controllers
             {
                 _context.LeaveAllocations.Remove(leaveAllocation);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool LeaveAllocationExists(int id)
         {
-          return _context.LeaveAllocations.Any(e => e.Id == id);
+            return _context.LeaveAllocations.Any(e => e.Id == id);
         }
     }
 }

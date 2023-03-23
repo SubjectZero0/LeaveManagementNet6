@@ -31,6 +31,7 @@ builder.Services.AddAutoMapper(typeof(AutoMapperConfig));
 // Inject Custom Contracts
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<ILeaveTypeRepository, LeaveTypeRepository>();
+builder.Services.AddScoped<ILeaveAllocationsRepository, LeaveAllocationRepository>();
 
 var app = builder.Build();
 

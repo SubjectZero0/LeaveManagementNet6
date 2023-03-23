@@ -33,7 +33,7 @@ namespace LeaveManagement.Web.Repositories
             if (leaveType is null)
             {
                 throw new Exception("leaveType {leaveTypeId} not Found");
-            };
+            }
 
             var currentUser = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext?.User);
 

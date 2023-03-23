@@ -4,7 +4,6 @@ namespace LeaveManagement.Web.Contracts
 {
     public interface ILeaveAllocationsRepository : IGenericRepository<LeaveAllocation>
     {
-        public Task LeaveAllocation(int leaveTypeId);
-        
+        public Task AddLeaveAllocation(int leaveTypeId);
     }
 }

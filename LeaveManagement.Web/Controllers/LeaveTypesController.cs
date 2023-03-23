@@ -19,7 +19,7 @@ namespace LeaveManagement.Web.Controllers
         public LeaveTypesController(ILeaveTypeRepository leaveTypeRepo, IMapper mapper)
         {
             this.leaveTypeRepo = leaveTypeRepo; //inject ILeaveTypeRepository
-            _mapper = mapper; //inject AutoMapperConfig
+            this._mapper = mapper; //inject AutoMapperConfig
         }
 
         // GET: LeaveTypes

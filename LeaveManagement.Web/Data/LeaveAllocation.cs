@@ -19,5 +19,7 @@ namespace LeaveManagement.Web.Data
         /// EmployeeId is NOT  FK yet
         /// </remarks>
         public string EmployeeId { get; set; }
+
+        public int Year { get; set; }
     }
 }

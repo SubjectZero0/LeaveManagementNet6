@@ -15,11 +15,13 @@ namespace LeaveManagement.Web.Controllers
     {
         private readonly ILeaveTypeRepository leaveTypeRepo; //inject ILeaveTypeRepository
         private readonly IMapper _mapper; //inject AutoMapperConfig
+        private readonly ILeaveAllocationsRepository leaveAllocationsRepository;
 
-        public LeaveTypesController(ILeaveTypeRepository leaveTypeRepo, IMapper mapper)
+        public LeaveTypesController(ILeaveTypeRepository leaveTypeRepo, IMapper mapper, ILeaveAllocationsRepository leaveAllocationsRepository)
         {
             this.leaveTypeRepo = leaveTypeRepo; //inject ILeaveTypeRepository
             this._mapper = mapper; //inject AutoMapperConfig
+            this.leaveAllocationsRepository = leaveAllocationsRepository;
         }
 
         // GET: LeaveTypes
@@ -146,6 +148,20 @@ namespace LeaveManagement.Web.Controllers
             await leaveTypeRepo.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
+
+        /// <summary>
+        /// Allocate Leave to all employees
+        /// </summary>
+        /// <param name="LeaveType.Id"></param>
+        /// <returns>void</returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AllocateLeave(int id)
+        {
+            await leaveAllocationsRepository.AddLeaveAllocation(id);
+            return RedirectToAction(nameof(Index));
+        }
+
 
         //----------------------------------Methods---------------------------------------
         private async Task<bool> LeaveTypeExists(int id) => await leaveTypeRepo.Exists(id);

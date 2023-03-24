@@ -6,9 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LeaveManagement.Web.Data;
+using Microsoft.AspNetCore.Authorization;
+using LeaveManagement.Web.Configurations.Entities;
 
 namespace LeaveManagement.Web.Controllers
 {
+    [Authorize(Roles = UserRoleConstants.Administrator)]
     public class LeaveAllocationsController : Controller
     {
         private readonly ApplicationDbContext _context;

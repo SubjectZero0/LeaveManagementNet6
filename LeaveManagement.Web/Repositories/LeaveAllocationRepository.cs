@@ -52,14 +52,14 @@ namespace LeaveManagement.Web.Repositories
             {
 
                 // if the leave already esists for this employee & for this year...
-                if(await AllocationExists(employee.Id, Year, leaveTypeId))
+                if(await AllocationExists(employee.Id, leaveTypeId, Year))
                 {
                     continue; // ...go to the next iteration. Skip Adding leaveAllocationsList
                 }
 
                 leaveAllocationList.Add(new LeaveAllocation
             {
-                EmployeeId = employee.Id,
+                EmployeeId = employee.Id.ToString(),
                 LeaveTypeId = leaveTypeId,
                 Year = Year,
                 LeaveType = leaveType,

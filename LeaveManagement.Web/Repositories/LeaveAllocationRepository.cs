@@ -3,28 +3,32 @@ using LeaveManagement.Web.Contracts;
 using LeaveManagement.Web.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.EntityFrameworkCore;
 
 namespace LeaveManagement.Web.Repositories
 {
     public class LeaveAllocationRepository : GenericRepository<LeaveAllocation>, ILeaveAllocationsRepository
     {
+        private readonly ApplicationDbContext _context;
         private readonly ILeaveTypeRepository _leaveTypeRepository;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly UserManager<Employee> _userManager;
 
         public LeaveAllocationRepository
             (
             ApplicationDbContext context,
             ILeaveTypeRepository leaveTypeRepository,
-            IHttpContextAccessor httpContextAccessor,
             UserManager<Employee> userManager
             ) : base(context)
         {
+            this._context = context;
             this._leaveTypeRepository = leaveTypeRepository;
-            this._httpContextAccessor = httpContextAccessor;
             this._userManager = userManager;
         }
 
+        /// <summary>
+        /// Allocates A list of leaves to all Employees
+        /// </summary>
+        /// <param name="leaveTypeId"></param>        
         public async Task AddLeaveAllocation(int leaveTypeId)
         {
             var Year = DateTime.Now.Year;
@@ -35,25 +39,54 @@ namespace LeaveManagement.Web.Repositories
                 throw new Exception($"leaveType {leaveTypeId} not Found");
             }
 
-            var currentUser = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext?.User);
+            var employees = await _userManager.GetUsersInRoleAsync(UserRoleConstants.User);
 
-            if (currentUser is null)
+            if (employees is null)
             {
-                throw new Exception("Unauthorized");
+                throw new Exception("No Users in the System");
             }
-            var currentUserId = currentUser.Id;
 
-            var leaveAllocation = new LeaveAllocation
+            List<LeaveAllocation> leaveAllocationList = new();
+
+            foreach ( var employee in employees )
             {
+
+                // if the leave already esists for this employee & for this year...
+                if(await AllocationExists(employee.Id, Year, leaveTypeId))
+                {
+                    continue; // ...go to the next iteration. Skip Adding leaveAllocationsList
+                }
+
+                leaveAllocationList.Add(new LeaveAllocation
+            {
+                EmployeeId = employee.Id,
                 LeaveTypeId = leaveTypeId,
-                EmployeeId = currentUserId,
                 Year = Year,
                 LeaveType = leaveType,
                 DateCreated = DateTime.Now,
-                DateModified = DateTime.Now,
-            };
+                DateModified = DateTime.Now
+                
+            });
 
-            await AddAsync(leaveAllocation);
+            }
+            await AddRangeAsync(leaveAllocationList);
+        }
+
+        ///<summary>
+        ///Checks if user already has leave allocated for that year
+        /// </summary>
+        public async Task<bool> AllocationExists(string employeeId, int leaveTypeId, int year)
+        {
+            
+            var allocations = await _context.LeaveAllocations.AnyAsync
+                (
+                leaveAllocations => leaveAllocations.LeaveTypeId == leaveTypeId &&
+                leaveAllocations.Year == year &&
+                leaveAllocations.EmployeeId == employeeId
+                );
+
+
+            return allocations;
         }
     }
 }

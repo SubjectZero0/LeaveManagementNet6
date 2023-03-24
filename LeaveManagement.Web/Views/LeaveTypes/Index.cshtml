@@ -35,7 +35,8 @@
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a class="delete-btn" data-id="@item.Id">Delete</a>
+                <a class="delete-btn" data-id="@item.Id">Delete</a> |
+                <a class="allocate-btn" data-id="@item.Id">Allocate Leave</a> |
             </td>
         </tr>
 }
@@ -43,7 +44,11 @@
 </table>
 
 <form id="deleteForm" asp-action="Delete">
-    <input type="hidden" id="leaveTypeId" name="Id" type="submit"/>
+    <input type="hidden" id="leaveTypeId" name="Id"/>
+</form>
+
+<form id="AllocationForm" asp-action="AllocateLeave">
+    <input type="hidden" id="leaveTypeId_allocate" name="Id" />
 </form>
 
 @section Scripts{
@@ -67,4 +72,25 @@
         });
     });
     </script>
-}
+
+    <script>
+    $(function(){
+            $(".allocate-btn").click(function (e) {
+            var button = $(this);
+            swal({
+                title: "Are you sure?",
+                text: "Are you sure you want to Allocate this leave to all Employees?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            }).then(function(confirm){
+                    if (confirm){
+                        var id = button.data("id");
+                        $("#leaveTypeId_allocate").val(id);
+                        $("#AllocationForm").submit();
+                    };
+                });
+        });
+    });
+    </script>
+    }

@@ -16,8 +16,6 @@ namespace LeaveManagement.Web.Views
         public string EmployeeId { get; set; }
 
         [Display(Name = "Year")]
-        [DataType(DataType.Date)]
-        [Required]
         public int Year { get; set; }
 
     }

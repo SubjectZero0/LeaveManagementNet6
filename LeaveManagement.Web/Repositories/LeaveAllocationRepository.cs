@@ -28,7 +28,7 @@ namespace LeaveManagement.Web.Repositories
         /// <summary>
         /// Allocates A list of leaves to all Employees
         /// </summary>
-        /// <param name="leaveTypeId"></param>        
+        /// <param name="leaveTypeId"></param>
         public async Task AddLeaveAllocation(int leaveTypeId)
         {
             var Year = DateTime.Now.Year;
@@ -48,26 +48,23 @@ namespace LeaveManagement.Web.Repositories
 
             List<LeaveAllocation> leaveAllocationList = new();
 
-            foreach ( var employee in employees )
+            foreach (var employee in employees)
             {
-
                 // if the leave already esists for this employee & for this year...
-                if(await AllocationExists(employee.Id, leaveTypeId, Year))
+                if (await AllocationExists(employee.Id, leaveTypeId, Year))
                 {
                     continue; // ...go to the next iteration. Skip Adding leaveAllocationsList
                 }
 
                 leaveAllocationList.Add(new LeaveAllocation
-            {
-                EmployeeId = employee.Id.ToString(),
-                LeaveTypeId = leaveTypeId,
-                Year = Year,
-                LeaveType = leaveType,
-                DateCreated = DateTime.Now,
-                DateModified = DateTime.Now
-                
-            });
-
+                {
+                    EmployeeId = employee.Id.ToString(),
+                    LeaveType = leaveType,
+                    LeaveTypeId = leaveType.Id,
+                    Year = Year,
+                    DateCreated = DateTime.Now,
+                    DateModified = DateTime.Now
+                });
             }
             await AddRangeAsync(leaveAllocationList);
         }
@@ -77,7 +74,6 @@ namespace LeaveManagement.Web.Repositories
         /// </summary>
         public async Task<bool> AllocationExists(string employeeId, int leaveTypeId, int year)
         {
-            
             var allocations = await _context.LeaveAllocations.AnyAsync
                 (
                 leaveAllocations => leaveAllocations.LeaveTypeId == leaveTypeId &&
@@ -85,8 +81,22 @@ namespace LeaveManagement.Web.Repositories
                 leaveAllocations.EmployeeId == employeeId
                 );
 
-
             return allocations;
+        }
+
+        /// <summary>
+        /// Method to get all leave allocations that belong to an employee
+        /// </summary>
+        /// <param name="employeeId"></param>
+        /// <returns> List of leave allocations with an EployeeId that matches the provided Employee.Id </returns>
+        public async Task<List<LeaveAllocation>> GetAllByEmployeeAsync(string employeeId)
+        {
+            //to also retrieve the related(nested) table LeaveType data, we have to do an inner join => Include
+            var employeeLeaveAllocationList = await _context.LeaveAllocations
+                .Include(q => q.LeaveType)
+                .Where(x => x.EmployeeId == employeeId).ToListAsync();
+
+            return employeeLeaveAllocationList;
         }
     }
 }

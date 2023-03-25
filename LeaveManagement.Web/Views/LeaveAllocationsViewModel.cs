@@ -9,14 +9,15 @@ namespace LeaveManagement.Web.Views
         public int Id { get; set; }
 
         [Display(Name = "Type of Leave")]
-        [Required]
-        public LeaveType LeaveType { get; set; }
+        public LeaveTypeViewModel LeaveType { get; set; }
+
+        [Display(Name = "Type of Leave ID")]
+        public int LeaveTypeId { get; set; }
 
         [Display(Name = "Employee")]
         public string EmployeeId { get; set; }
 
         [Display(Name = "Year")]
         public int Year { get; set; }
-
     }
 }

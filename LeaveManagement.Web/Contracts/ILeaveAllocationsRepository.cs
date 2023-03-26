@@ -9,5 +9,7 @@ namespace LeaveManagement.Web.Contracts
         public Task<bool> AllocationExists(string employeeId, int leaveTypeId, int year);
 
         public Task<List<LeaveAllocation>> GetAllByEmployeeAsync(string employeeId);
+
+        public Task<LeaveAllocation> FindByEmployeeAsync(int? id);
     }
 }

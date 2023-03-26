@@ -62,6 +62,7 @@ namespace LeaveManagement.Web.Repositories
                     LeaveType = leaveType,
                     LeaveTypeId = leaveType.Id,
                     Year = Year,
+                    NumberOfDays = leaveType.DefaultDays,
                     DateCreated = DateTime.Now,
                     DateModified = DateTime.Now
                 });
@@ -82,6 +83,30 @@ namespace LeaveManagement.Web.Repositories
                 );
 
             return allocations;
+        }
+
+        /// <summary>
+        /// Method to get the Specific Employee's LeaveAllocation along with the LeaveType.
+        /// </summary>
+        /// <param name="leaveTypeId">The LeaveTypeId of the LeaveAllocation instance</param>
+        /// <returns>An instance of the LeaveAllocation inner join with the LeaveType</returns>
+        public async Task<LeaveAllocation> FindByEmployeeAsync(int? id)
+        {
+            if (id is null || _context is null)
+            {
+                throw new Exception("There is nothing to Show");
+            }
+
+            var employeeLeaveAllocation = await _context.LeaveAllocations
+                .Include(e => e.LeaveType)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (employeeLeaveAllocation == null)
+            {
+                throw new Exception("There are no leaves with this leave type");
+            }
+
+            return employeeLeaveAllocation;
         }
 
         /// <summary>

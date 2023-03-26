@@ -1,0 +1,41 @@
+﻿@model LeaveManagement.Web.Views.LeaveAllocationsViewModel
+
+@{
+    ViewData["Title"] = "EditAllocation";
+}
+
+<h1>EditAllocation</h1>
+
+<h4>LeaveAllocationsViewModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="EditAllocation">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="EmployeeId" />
+            <input type="hidden" asp-for="LeaveTypeId" />
+
+            <div class="form-group m-2">
+                <label asp-for="NumberOfDays" class="control-label"></label>
+                <input asp-for="NumberOfDays" class="form-control" />
+                <span asp-validation-for="NumberOfDays" class="text-danger"></span>
+            </div>
+
+            <div class="form-group m-2">
+                <label asp-for="Year" class="control-label"></label>
+                <input asp-for="Year" class="form-control" />
+                <span asp-validation-for="Year" class="text-danger"></span>
+            </div>
+            <div class="form-group m-2">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="ViewLeaveAllocations" asp-route-id = "@Model.EmployeeId">Back to Allocations</a>
+</div>
+

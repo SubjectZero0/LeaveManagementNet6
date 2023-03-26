@@ -77,5 +77,55 @@ namespace LeaveManagement.Web.Controllers
             var employeeLeaveAllocationsVM = _mapper.Map<List<LeaveAllocationsViewModel>>(employeeLeaveAllocations);
             return View(employeeLeaveAllocationsVM);
         }
+
+        /// <summary>
+        /// GET the leave allocation for the specific employee
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>The view of the specific leave allocation in Editable Form</returns>
+        public async Task<IActionResult> EditAllocation(int id)
+        {
+            LeaveAllocation? leaveAllocation = await _leaveAllocationsRepository.FindByEmployeeAsync(id);
+
+            LeaveAllocationsViewModel leaveAllocationsVM = _mapper.Map<LeaveAllocationsViewModel>(leaveAllocation);
+            return View(leaveAllocationsVM);
+        }
+
+        /// <summary>
+        /// Edit The Leave Allocation of the Employee
+        /// </summary>
+        /// <param name="id">The Id of the leave allocation to be edited. Tracked by form.</param>
+        /// <param name="leaveAllocationVM">The view model of the leave allocation.</param>
+        /// <param name="employeeId">The Id of the employee. Tracked by form.</param>
+        /// <returns>The edited leave allocation instance</returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditAllocation(int id, string employeeId, LeaveAllocationsViewModel leaveAllocationVM)
+        {
+            if (employeeId is null)
+            {
+                throw new Exception($"Employee Id {employeeId} does not exist");
+            }
+
+            var leaveAllocation = await _leaveAllocationsRepository.GetAsync(id);
+
+            if (leaveAllocation is null)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+
+                leaveAllocation.DateModified = DateTime.Now;
+                leaveAllocation.NumberOfDays = leaveAllocationVM.NumberOfDays;
+                leaveAllocation.Year = leaveAllocationVM.Year;
+
+                await _leaveAllocationsRepository.UpdateAsync(leaveAllocation);
+
+                return RedirectToAction(nameof(ViewLeaveAllocations), new { id = employeeId });
+            }
+            return View(leaveAllocationVM);
+        }
     }
 }

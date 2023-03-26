@@ -31,7 +31,7 @@ namespace LeaveManagement.Web.Repositories
         {
             var entity = await GetAsync(id);
 
-            if (entity != null)
+            if (entity is not null)
             {
                 context.Set<T>().Remove(entity);
             }
@@ -43,7 +43,7 @@ namespace LeaveManagement.Web.Repositories
         {
             var entity = await GetAsync(id);
 
-            if (entity != null)
+            if (entity is not null)
             {
                 return true;
             }
@@ -57,9 +57,9 @@ namespace LeaveManagement.Web.Repositories
 
         public async Task<T?> GetAsync(int? id)
         {
-            if (id == null)
+            if (id is null)
             {
-                return null;
+                throw new Exception("Not found");
             }
             var entity = await context.Set<T>().FindAsync(id); //set<T>() is a generic table relative to T. Any table used with this method
 

@@ -1,7 +1,7 @@
-﻿@using LeaveManagement.Web.Views;
-@using LeaveManagement.Web.Data
-@model IEnumerable<LeaveAllocationsViewModel>
-@*@model IEnumerable<LeaveAllocation>*@
+﻿@using LeaveManagement.Web.Configurations.Entities;
+@using LeaveManagement.Web.Views;
+@using LeaveManagement.Web.Data;
+@model IEnumerable<LeaveAllocationsViewModel>;
 
 @{
     ViewData["Title"] = "ViewLeaveAllocations";
@@ -12,12 +12,17 @@
 <table class="table">
     <thead>
         <tr>
+           
             <th>
                 @Html.DisplayNameFor(model => model.LeaveType)
             </th>
 
             <th>
                 @Html.DisplayNameFor(model => model.LeaveType.DefaultDays)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.NumberOfDays)
             </th>
            
             <th>
@@ -28,28 +33,38 @@
         </tr>
     </thead>
     <tbody>
+
 @foreach (var item in Model) {
         <tr>
+               
             <td>
                     @Html.DisplayFor(modelItem => item.LeaveType.Name)
             </td>
 
-                <td>
-                    @Html.DisplayFor(modelItem => item.LeaveType.DefaultDays)
-                </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LeaveType.DefaultDays)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.NumberOfDays)
+            </td>
            
             <td>
                 @Html.DisplayFor(modelItem => item.Year)
             </td>
-           
-            <td>
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> 
-            </td>
+
+            @if (User.IsInRole(UserRoleConstants.Administrator))
+            {
+                <td>
+                    <a asp-action="EditAllocation" asp-route-id="@item.Id">Edit Allocation</a>
+                </td>
+            }
+
         </tr>
         }
         
     </tbody>
 </table>
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Back to Employees</a>
 </div>

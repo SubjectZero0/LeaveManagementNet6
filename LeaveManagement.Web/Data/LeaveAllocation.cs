@@ -20,6 +20,8 @@ namespace LeaveManagement.Web.Data
         /// </remarks>
         public string EmployeeId { get; set; }
 
+        public int NumberOfDays { get; set; }
+
         public int Year { get; set; }
     }
 }

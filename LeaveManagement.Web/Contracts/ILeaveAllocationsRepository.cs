@@ -1,4 +1,6 @@
 ﻿using LeaveManagement.Web.Data;
+using LeaveManagement.Web.Repositories;
+using LeaveManagement.Web.Views;
 
 namespace LeaveManagement.Web.Contracts
 {
@@ -11,5 +13,7 @@ namespace LeaveManagement.Web.Contracts
         public Task<List<LeaveAllocation>> GetAllByEmployeeAsync(string employeeId);
 
         public Task<LeaveAllocation> FindByEmployeeAsync(int? id);
+
+        public Task UpdateEmployeeAllocation(LeaveAllocation leaveAllocation, LeaveAllocationsViewModel leaveAllocationVM);
     }
 }

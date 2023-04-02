@@ -125,12 +125,12 @@ namespace LeaveManagement.Web.Repositories
             return employeeLeaveAllocationList;
         }
 
-        /// <summary>
-        /// Method to Update a Leave Allocation based on the provided info from a form
-        /// </summary>
-        /// <param name="leaveAllocation"></param>
-        /// <param name="leaveAllocationVM"></param>
-        /// <returns>The updated model instance. Updates DateModified, NumberOfDays & Year</returns>
+        ///<summary>
+        ///Method to Update a Leave Allocation based on the provided info from a form
+        ///</summary>
+        ///<param name="leaveAllocation"></param>
+        ///<param name="leaveAllocationVM"></param>
+        ///<returns>The updated model instance. Updates DateModified, NumberOfDays & Year</returns>
         public async Task UpdateEmployeeAllocation(LeaveAllocation leaveAllocation, LeaveAllocationsViewModel leaveAllocationVM)
         {
             leaveAllocation.DateModified = DateTime.Now;

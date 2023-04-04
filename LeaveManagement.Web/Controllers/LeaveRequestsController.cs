@@ -10,9 +10,11 @@ using LeaveManagement.Web.Contracts;
 using AutoMapper;
 using LeaveManagement.Web.Views;
 using LeaveManagement.Web.Repositories;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LeaveManagement.Web.Controllers
 {
+    [Authorize]
     public class LeaveRequestsController : Controller
     {
         private readonly ILeaveRequestRepository _leaveRequestRepository;
@@ -50,6 +52,13 @@ namespace LeaveManagement.Web.Controllers
         //    return View(leaveRequest);
         //}
 
+        // GET: LeaveRequests/MyLeaves
+        public async Task<IActionResult> MyLeaves()
+        {
+            var myLeavesVM = await _leaveRequestRepository.GetMyLeavesAsync();
+            return View(myLeavesVM);
+        }
+
         // GET: LeaveRequests/Create
         public async Task<IActionResult> Create()
         {
@@ -59,20 +68,16 @@ namespace LeaveManagement.Web.Controllers
         }
 
         // POST: LeaveRequests/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(LeaveRequestCreateViewModel leaveRequestVM)
         {
-            var user = await _leaveRequestRepository.GetCurrentUser();
-
             if (ModelState.IsValid)
             {
                 var leaveRequest = _mapper.Map<LeaveRequest>(leaveRequestVM);
-                await _leaveRequestRepository.CreateWithCurrentUser(leaveRequest, user);
+                await _leaveRequestRepository.CreateWithCurrentUser(leaveRequest);
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), "Home");
             }
 
             ViewData["LeaveTypeId"] = new SelectList(await _leaveTypeRepository.GetAllAsync(), "Id", "Name", leaveRequestVM.LeaveTypeId);

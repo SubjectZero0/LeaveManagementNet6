@@ -29,6 +29,20 @@ namespace LeaveManagement.Web.Repositories
             _mapper = mapper;
         }
 
+        public async Task CancelLeaveRequest(int id)
+        {
+            var request = await _context.LeaveRequests.FindAsync(id);
+            if (request is null)
+            {
+                throw new Exception("No record found");
+            }
+            else
+            {
+                request.IsCancelled = true;
+                await _context.SaveChangesAsync();
+            }
+        }
+
         public async Task CreateWithCurrentUser(LeaveRequest leaveRequest)
         {
             var user = await GetCurrentUser();
@@ -64,28 +78,6 @@ namespace LeaveManagement.Web.Repositories
                 return await Task.FromResult(user);
             }
             throw new Exception("You are not an authenticated user");
-        }
-
-        public async Task<EmployeeLeavesListViewModel> GetMyLeavesAsync()
-        {
-            var user = await GetCurrentUser();
-
-            // get the model lists
-            var leaveAllocations = await _leaveAllocationsRepository.GetAllByEmployeeAsync(user.FindFirstValue(ClaimTypes.NameIdentifier));
-            var leaveRequests = await GetAllEmployeeRequestsAsync(user.FindFirstValue(ClaimTypes.NameIdentifier));
-
-            // get the ViewModel lists
-            var leaveAllocationsVM = _mapper.Map<List<LeaveAllocationsListViewModel>>(leaveAllocations);
-            var leaveRequestsVM = _mapper.Map<List<LeaveRequestsListViewModel>>(leaveRequests);
-
-            // create a new instance of EmployeeLeavesListViewModel
-            var employeeLeavesList = new EmployeeLeavesListViewModel()
-            {
-                LeaveAllocations = leaveAllocationsVM,
-                LeaveRequests = leaveRequestsVM
-            };
-
-            return employeeLeavesList;
         }
     }
 }

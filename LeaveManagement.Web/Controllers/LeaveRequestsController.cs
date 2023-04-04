@@ -11,6 +11,7 @@ using AutoMapper;
 using LeaveManagement.Web.Views;
 using LeaveManagement.Web.Repositories;
 using Microsoft.AspNetCore.Authorization;
+using LeaveManagement.Web.Services;
 
 namespace LeaveManagement.Web.Controllers
 {
@@ -18,44 +19,26 @@ namespace LeaveManagement.Web.Controllers
     public class LeaveRequestsController : Controller
     {
         private readonly ILeaveRequestRepository _leaveRequestRepository;
-        private readonly IMapper _mapper;
         private readonly ILeaveTypeRepository _leaveTypeRepository;
+        private readonly ILeaveRequestService _leaveRequestService;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IMapper _mapper;
 
         public LeaveRequestsController(ILeaveRequestRepository leaveRequestRepository,
-                                       IMapper mapper,
-                                       ILeaveTypeRepository leaveTypeRepository)
+                                       ILeaveTypeRepository leaveTypeRepository,
+                                       ILeaveRequestService leaveRequestService,
+                                       IMapper mapper)
         {
             _leaveRequestRepository = leaveRequestRepository;
-            _mapper = mapper;
             _leaveTypeRepository = leaveTypeRepository;
+            _leaveRequestService = leaveRequestService;
+            _mapper = mapper;
         }
-
-        // GET: LeaveRequests
-
-        // GET: LeaveRequests/Details/5
-        //public async Task<IActionResult> Details(int? id)
-        //{
-        //    if (id == null || _context.LeaveRequests == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var leaveRequest = await _context.LeaveRequests
-        //        .Include(l => l.LeaveType)
-        //        .FirstOrDefaultAsync(m => m.Id == id);
-        //    if (leaveRequest == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(leaveRequest);
-        //}
 
         // GET: LeaveRequests/MyLeaves
         public async Task<IActionResult> MyLeaves()
         {
-            var myLeavesVM = await _leaveRequestRepository.GetMyLeavesAsync();
+            var myLeavesVM = await _leaveRequestService.GetMyLeavesAsync();
             return View(myLeavesVM);
         }
 
@@ -84,100 +67,10 @@ namespace LeaveManagement.Web.Controllers
             return View(leaveRequestVM);
         }
 
-        // GET: LeaveRequests/Edit/5
-        //public async Task<IActionResult> Edit(int? id)
-        //{
-        //    if (id == null || _context.LeaveRequests == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var leaveRequest = await _context.LeaveRequests.FindAsync(id);
-        //    if (leaveRequest == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    ViewData["LeaveTypeId"] = new SelectList(_context.LeaveTypes, "Id", "Id", leaveRequest.LeaveTypeId);
-        //    return View(leaveRequest);
-        //}
-
-        // POST: LeaveRequests/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(int id, [Bind("DateStarted,DateEnded,LeaveTypeId,IsApproved,IsCancelled,Comment,RequestingEmployeeId,Id,DateCreated,DateModified")] LeaveRequest leaveRequest)
-        //{
-        //    if (id != leaveRequest.Id)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        try
-        //        {
-        //            _context.Update(leaveRequest);
-        //            await _context.SaveChangesAsync();
-        //        }
-        //        catch (DbUpdateConcurrencyException)
-        //        {
-        //            if (!LeaveRequestExists(leaveRequest.Id))
-        //            {
-        //                return NotFound();
-        //            }
-        //            else
-        //            {
-        //                throw;
-        //            }
-        //        }
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    ViewData["LeaveTypeId"] = new SelectList(_context.LeaveTypes, "Id", "Id", leaveRequest.LeaveTypeId);
-        //    return View(leaveRequest);
-        //}
-
-        // GET: LeaveRequests/Delete/5
-        //public async Task<IActionResult> Delete(int? id)
-        //{
-        //    if (id == null || _context.LeaveRequests == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var leaveRequest = await _context.LeaveRequests
-        //        .Include(l => l.LeaveType)
-        //        .FirstOrDefaultAsync(m => m.Id == id);
-        //    if (leaveRequest == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(leaveRequest);
-        //}
-
-        // POST: LeaveRequests/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> DeleteConfirmed(int id)
-        //{
-        //    if (_context.LeaveRequests == null)
-        //    {
-        //        return Problem("Entity set 'ApplicationDbContext.LeaveRequests'  is null.");
-        //    }
-        //    var leaveRequest = await _context.LeaveRequests.FindAsync(id);
-        //    if (leaveRequest != null)
-        //    {
-        //        _context.LeaveRequests.Remove(leaveRequest);
-        //    }
-
-        //    await _context.SaveChangesAsync();
-        //    return RedirectToAction(nameof(Index));
-        //}
-
-        //private bool LeaveRequestExists(int id)
-        //{
-        //  return (_context.LeaveRequests?.Any(e => e.Id == id)).GetValueOrDefault();
-        //}
+        public async Task<IActionResult> Cancel(int id)
+        {
+            await _leaveRequestRepository.CancelLeaveRequest(id);
+            return RedirectToAction(nameof(MyLeaves));
+        }
     }
 }

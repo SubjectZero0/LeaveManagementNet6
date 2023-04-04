@@ -106,9 +106,41 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.IsApproved)
                 </td>
+
+                <td>
+                    <a class="cancel-btn" data-id="@item.Id">Cancel</a>
+                </td>
             </tr>
         }
+
+       
 
     </tbody>
 </table>
 
+<form id="CancelForm" asp-action="Cancel">
+    <input type="hidden" id="requestId" name="Id" />
+</form>
+
+
+@section Scripts{
+    <script>
+    $(function(){
+            $(".cancel-btn").click(function (e) {
+            var button = $(this);
+            swal({
+                title: "Are you sure?",
+                text: "Are you sure you want to CANCEL your request?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            }).then(function(confirm){
+                    if (confirm){
+                        var id = button.data("id");
+                        $("#requestId").val(id);
+                        $("#CancelForm").submit();
+                    };
+                });
+        });
+    });
+    </script>}

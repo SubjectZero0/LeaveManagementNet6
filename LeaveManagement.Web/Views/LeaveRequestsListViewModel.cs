@@ -7,6 +7,8 @@ namespace LeaveManagement.Web.Views
 {
     public class LeaveRequestsListViewModel
     {
+        public int Id { get; set; }
+
         [Display(Name = "Starting Date")]
         [DataType(DataType.Date)]
         public DateTime DateStarted { get; set; }

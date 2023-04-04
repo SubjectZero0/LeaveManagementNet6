@@ -10,8 +10,8 @@ namespace LeaveManagement.Web.Contracts
 
         Task<ClaimsPrincipal> GetCurrentUser();
 
-        Task<EmployeeLeavesListViewModel> GetMyLeavesAsync();
-
         Task<List<LeaveRequest>> GetAllEmployeeRequestsAsync(string employeeId);
+
+        Task CancelLeaveRequest(int id);
     }
 }

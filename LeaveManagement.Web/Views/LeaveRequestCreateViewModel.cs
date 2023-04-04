@@ -2,7 +2,7 @@
 
 namespace LeaveManagement.Web.Views
 {
-    public class LeaveRequestCreateViewModel
+    public class LeaveRequestCreateViewModel : IValidatableObject
     {
         public int Id { get; set; }
 
@@ -11,16 +11,22 @@ namespace LeaveManagement.Web.Views
         public int LeaveTypeId { get; set; }
 
         [Display(Name = "Start Date")]
-        [Required]
         [DataType(DataType.Date)]
-        public DateTime DateStarted { get; set; }
+        public DateTime DateStarted { get; set; } = DateTime.Now;
 
         [Display(Name = "End Date")]
-        [Required]
         [DataType(DataType.Date)]
-        public DateTime DateEnded { get; set; }
+        public DateTime DateEnded { get; set; } = DateTime.Now;
 
         [Display(Name = "Description")]
         public string? Comment { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (DateStarted > DateEnded)
+            {
+                yield return new ValidationResult("The Start Date can't be after the End Date", new[] { nameof(DateStarted), nameof(DateEnded) });
+            }
+        }
     }
 }

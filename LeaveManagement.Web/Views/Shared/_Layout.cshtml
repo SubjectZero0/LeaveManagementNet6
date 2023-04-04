@@ -26,13 +26,17 @@
                             <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="LeaveRequests" asp-action="Create">Apply For Leave</a>
-                        </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="LeaveRequests" asp-action="Create">Apply For Leave</a>
+                            </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Privacy">My Leave</a>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="LeaveRequests" asp-action="MyLeaves">My Leaves</a>
+                            </li>
+                        }
+
                         @if (User.IsInRole(UserRoleConstants.Administrator))
                         {
                             <li class="nav-item">

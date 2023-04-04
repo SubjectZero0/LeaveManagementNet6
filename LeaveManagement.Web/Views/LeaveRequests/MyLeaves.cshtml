@@ -1,0 +1,114 @@
+﻿@using LeaveManagement.Web.Views;
+@model EmployeeLeavesListViewModel;
+
+@{
+    ViewData["Title"] = "My Leaves";
+}
+
+<h1>My Leave Allocations</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+
+            <th>
+                @Html.DisplayNameFor(model => model.LeaveAllocations[0].LeaveType)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.LeaveAllocations[0].NumberOfDays)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.LeaveAllocations[0].Year)
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model.LeaveAllocations)
+        {
+            <tr>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.LeaveType.Name)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.NumberOfDays)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Year)
+                </td>
+
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+<hr />
+
+<h1>My Leave Requests</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+
+            <th>
+                @Html.DisplayNameFor(model => model.LeaveRequests[0].LeaveType)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.LeaveRequests[0].DateStarted)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.LeaveRequests[0].DateEnded)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.LeaveRequests[0].IsCancelled)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.LeaveRequests[0].IsApproved)
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model.LeaveRequests)
+        {
+            <tr>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.LeaveType.Name)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateStarted)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateEnded)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsCancelled)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsApproved)
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+

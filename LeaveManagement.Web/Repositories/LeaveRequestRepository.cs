@@ -70,6 +70,12 @@ namespace LeaveManagement.Web.Repositories
             return requests;
         }
 
+        public async Task<List<LeaveRequest>> GetAllWithLeaveTypeAsync()
+        {
+            var leaveRequests = await _context.LeaveRequests.Include(q => q.LeaveType).ToListAsync();
+            return leaveRequests;
+        }
+
         public async Task<ClaimsPrincipal> GetCurrentUser()
         {
             var user = _httpContextAccessor.HttpContext?.User;

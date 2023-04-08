@@ -13,5 +13,7 @@ namespace LeaveManagement.Web.Contracts
         Task<List<LeaveRequest>> GetAllEmployeeRequestsAsync(string employeeId);
 
         Task CancelLeaveRequest(int id);
+
+        Task<List<LeaveRequest>> GetAllWithLeaveTypeAsync();
     }
 }

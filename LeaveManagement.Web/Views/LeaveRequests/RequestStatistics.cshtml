@@ -1,0 +1,56 @@
+﻿@model LeaveManagement.Web.Views.AdminLeaveStatisticsViewModel
+
+@{
+    ViewData["Title"] = "Leave Request Statistics";
+}
+
+<h1>Leave Request Statistics</h1>
+
+<hr />
+
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Approved)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Approved)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Pending)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Pending)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Rejected)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Rejected)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Cancelled)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Cancelled)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Total)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Total)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.LeaveDaysApproved)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.LeaveDaysApproved)
+        </dd>
+    </dl>
+
+</div>

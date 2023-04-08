@@ -12,6 +12,7 @@ using LeaveManagement.Web.Views;
 using LeaveManagement.Web.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using LeaveManagement.Web.Services;
+using LeaveManagement.Web.Configurations.Entities;
 
 namespace LeaveManagement.Web.Controllers
 {
@@ -71,6 +72,20 @@ namespace LeaveManagement.Web.Controllers
         {
             await _leaveRequestRepository.CancelLeaveRequest(id);
             return RedirectToAction(nameof(MyLeaves));
+        }
+
+        [Authorize(Roles = UserRoleConstants.Administrator)]
+        public async Task<IActionResult> RequestStatistics()
+        {
+            var leaveStatistics = await _leaveRequestService.GetAdminLeaveStatisticsAsync();
+            return View(leaveStatistics);
+        }
+
+        [Authorize(Roles = UserRoleConstants.Administrator)]
+        public async Task<IActionResult> LeaveRequestsList()
+        {
+            var leaveRequestsList = await _leaveRequestService.GetAdminLeaveRequestsListAsync();
+            return View(leaveRequestsList);
         }
     }
 }
